@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tapping Game</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background: linear-gradient(to bottom right, #74ebd5, #9face6);
+    }
+
+    #customMessage {
+      color: #000;
+      font-size: 20px;
+      margin-bottom: 20px;
+      max-width: 80%;
+      text-align: center;
+    }
+
+    #tapButton {
+      padding: 20px 40px;
+      font-size: 24px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: transform 0.1s;
+    }
+
+    #tapButton:active {
+      transform: scale(0.95);
+    }
+
+    #counter {
+      font-size: 32px;
+      margin: 20px 0;
+      color: #fff;
+    }
+
+    #nextButton {
+      display: none;
+      padding: 12px 30px;
+      font-size: 20px;
+      background-color: #2196F3;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="customMessage">I'm sorry if masira araw mo dahil sa'kin or sa message na 'to, ah.
+ But I don't want to keep it to myself and turn this pain into anger.
+Ayaw kong magalit sa'yo, kasi bakit ako magagalit sa isang taong minahal at minamahal ko ng sobra, diba?
+So yeah...
+ Sorry nga rin pala if lumayo ako and hindi ko sinabi 'to sa'yo kaagad.
+ Ayaw ko kasing gumalaw based on my impulse--baka kasi mas masaktan kita.
+ Kaya pinag-isipan ko pa talaga kung paano 'to sasabihin sa'yo.
+ And if you think na:
+ "Bigyan ko muna si Seal ng personal space or time para ma-process yung feelings niya,"
+ please don't.
+I want to be honest with you.
+ I tried so hard just to love the thing you called "solitude"--but I really can't.
+ If in your perspective you call that "solitude," in my perspective, I
+ call that "loneliness."
+I don't want to ruin your day and hurt you nor give you another trauma (bakit ko naman kasi gagawin
+ 'yun sa taong mahal ko, eh?).
+ So please, sana huwag kang umiyak.
+ Pag nalaman kong umiyak ka, pupunta ako diyan sa inyo.
+ Magdadala ako ng isang sakong tissue para lang punasan yung luha mo.</div>
+  <div id="counter">Taps: 0</div>
+  <button id="tapButton">Tap Me!</button>
+  <form action="message5.html">
+    <button type="submit" id="nextButton">Next</button>
+  </form>
+
+  <script>
+    let tapCount = 0;
+    const tapButton = document.getElementById("tapButton");
+    const counterDisplay = document.getElementById("counter");
+    const nextButton = document.getElementById("nextButton");
+
+    tapButton.addEventListener("click", () => {
+      tapCount++;
+      counterDisplay.textContent = `Taps: ${tapCount}`;
+
+      if (tapCount >= 100) {
+        tapButton.disabled = true;
+        tapButton.textContent = "Done!";
+        nextButton.style.display = "inline-block";
+      }
+    });
+  </script>
+</body>
+</html>

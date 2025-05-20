@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Complete the Word</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 40px;
+      background-color: #f5f5f5;
+    }
+    h2 {
+      margin-bottom: 10px;
+    }
+    #custom-message {
+      font-size: 18px;
+      color: #333;
+      margin-bottom: 20px;
+    }
+    #blanks {
+      font-size: 32px;
+      letter-spacing: 10px;
+      margin-bottom: 20px;
+    }
+    .letters-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .row {
+      display: flex;
+      gap: 10px;
+    }
+    button.letter-btn {
+      font-size: 20px;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 10px;
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+      transition: opacity 0.3s;
+    }
+    .letter-btn:disabled {
+      opacity: 0;
+      cursor: not-allowed;
+    }
+    #message {
+      margin-top: 20px;
+      font-weight: bold;
+      font-size: 18px;
+      min-height: 24px;
+    }
+    #next-btn {
+      margin-top: 30px;
+      display: none;
+      background-color: #28a745;
+      color: white;
+      padding: 12px 30px;
+      font-size: 18px;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <p id="custom-message">Yes, Lala, you deserve more than I can give.
+ That's why I thought that:
+ "Am I really deserving to be with someone like you? Or am I even deserving to be loved in the first place?"
+Kaya yeah... ayyy, tapos ito pa pala,
+I'm sorry if na-overwhelm ka sa treatment ko, ahh. Deserve mo naman kasi,
+ kaya binigay ko sa'yo.
+ Sorry nga rin pala if medyo immature ako (medyo lang ba? HAHAAHAH). First time ko lang
+ kasi mapasok sa ganitong kaseryosong relationship eh, kaya 'di ko alam yung gagawin ko...
+I don't want to force
+ myself to you anymore, kaya wag ka nang mag-alala. Yung professionalism na hinahanap mo, makikita mo na.
+ Hindi na ako babanat sa'yo.
+ But if you realize that you still love me, or you love me again, just say it to
+ me. Maghihintay ako, don't worry.
+Hatdog ka kasi eh. Akala ko lalaban tayo
+ hanggang dulo, kasi nakita ko kung gaano kang kalungkot nung Foundation Day. Kaya nung sinabi mo sa'king
+ wala ka nang gusto sa'kin, parang nasabi ko tuloy sa isip ko na,
+ "Teh, ikaw na lang pala lumalaban eh. Hatdog ka. HAHAHAHAHA."</p>
+  <div id="blanks"></div>
+
+  <div class="letters-container" id="letters-container"></div>
+
+  <div id="message"></div>
+
+  <form action="message4.html">
+    <button id="next-btn" type="submit">Next</button>
+  </form>
+
+  <script>
+    const word = "TIMING";
+    let revealed = Array(word.length).fill(false);
+    let wrongGuesses = 0;
+    const maxWrong = 5;
+
+    const blanks = document.getElementById("blanks");
+    const container = document.getElementById("letters-container");
+    const message = document.getElementById("message");
+    const nextBtn = document.getElementById("next-btn");
+
+    function updateBlanks() {
+      let display = "";
+      for (let i = 0; i < word.length; i++) {
+        display += revealed[i] ? word[i] + " " : "_ ";
+      }
+      blanks.textContent = display.trim();
+    }
+
+    function isComplete() {
+      return revealed.every(val => val);
+    }
+
+    function resetProgress() {
+      revealed.fill(false);
+      wrongGuesses = 0;
+      updateBlanks();
+      message.textContent = "Too many wrong answers. Try again!";
+      // Re-enable all buttons
+      document.querySelectorAll(".letter-btn").forEach(btn => {
+        btn.disabled = false;
+        btn.style.opacity = "1";
+      });
+    }
+
+    function checkLetter(letter, button) {
+      button.disabled = true;
+      button.style.opacity = "0";
+      let found = false;
+
+      for (let i = 0; i < word.length; i++) {
+        if (word[i] === letter && !revealed[i]) {
+          revealed[i] = true;
+          found = true;
+        }
+      }
+
+      if (found) {
+        updateBlanks();
+        message.textContent = "Correct!";
+        if (isComplete()) {
+          message.textContent = "You completed the word!";
+          nextBtn.style.display = "inline-block";
+        }
+      } else {
+        wrongGuesses++;
+        if (wrongGuesses >= maxWrong) {
+          resetProgress();
+        } else {
+          message.textContent = `Wrong! ${maxWrong - wrongGuesses} tries left.`;
+        }
+      }
+    }
+
+    // QWERTY layout
+    const layout = [
+      "QWERTYUIOP",
+      "ASDFGHJKL",
+      "ZXCVBNM"
+    ];
+
+    layout.forEach(row => {
+      const rowDiv = document.createElement("div");
+      rowDiv.className = "row";
+      row.split('').forEach(letter => {
+        const btn = document.createElement("button");
+        btn.textContent = letter;
+        btn.className = "letter-btn";
+        btn.addEventListener("click", () => checkLetter(letter, btn));
+        rowDiv.appendChild(btn);
+      });
+      container.appendChild(rowDiv);
+    });
+
+    updateBlanks();
+  </script>
+
+</body>
+</html>

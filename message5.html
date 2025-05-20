@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Simple Maze Game</title>
+<style>
+  body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    background: #222;
+    font-family: Arial, sans-serif;
+  }
+  #customMessage {
+    color: white;
+    font-size: 18px;
+    margin-bottom: 15px;
+    max-width: 90vw;
+    padding: 10px;
+    text-align: center;
+    white-space: pre-wrap;
+    max-height: 300px;
+    overflow-y: auto;
+    background: rgba(0,0,0,0.4);
+    border-radius: 8px;
+  }
+  #maze {
+    display: grid;
+    grid-template-columns: repeat(10, 40px);
+    grid-template-rows: repeat(10, 40px);
+    gap: 2px;
+  }
+  .cell {
+    width: 40px;
+    height: 40px;
+    background-color: #eee;
+  }
+  .wall {
+    background-color: #333;
+  }
+  #player {
+    background-color: #4CAF50;
+  }
+  #finish {
+    background-color: #f44336;
+  }
+  #nextBtn {
+    margin-top: 20px;
+    padding: 12px 30px;
+    font-size: 18px;
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    display: none;
+    text-decoration: none;
+  }
+</style>
+</head>
+<body>
+
+<div id="customMessage">But yeah... let me end this message by saying this:
+I don't want to
+ say "I love you" over and over again,
+ 'cause you're not going to believe me anyways.
+ But I just want to remind you that I'm a man of my word.
+ If I say "I love you," I really mean it.
+Mamahalin kita at hihintayin kita, hindi gaya ng paghihintay na ginawa ni Jacob na hindi ka kayang panindigan sa mga magulang mo.
+ Hihintayin kita at papanindigan kita hanggang dulo.
+Mamahalin kita at aalagaan kita, hindi gaya ng ginawa sa'yo ni Daniel na pinaramdam niyang wala siyang pake sa'yo.
+ Aalagaan kita kahit pumuti pa lahat ng buhok natin.
+Mamahalin kita at magtatapat ako sa'yo, hindi gaya ng ginawa ni Genesis, na nagmahal at nag-entertain ng ibang babae.
+ Magtatapat ako sa'yo at gagawin ko ang lahat ng makakaya ko para magustuhan mo ulit ako.
+Mamahalin kita, Lala, kahit hindi mo ako mahalin pabalik.
+ Sana lang, huwag mo naman akong ipagtabuyan. Huwag mo naman akong pigilan na mahalin ka.
+ And please, maniwala ka naman sa'kin. Kung sinaktan ka nila, pues, hindi ako sila. Hindi ako si Jacob, hindi ako si Genesis, hindi ako si Daniel. Ako si Seal. Ako si Eboy.
+I know na hindi ka naman maniniwala sa mga sinasabi ko dito, pero sana naman pagbigyan
+ mo 'kong patunayan yung sarili ko.
+ Pagbigyan mo 'kong mahalin ka.
+I don't know how to end this message, but let me end this by saying:
+"Lala, kahit anong mangyari, nandito lang ako para sa'yo. Lagi kitang mamahalin."
+ Byeee. Have a great day...</div>
+
+<div id="maze"></div>
+
+<form action="message6.html">
+  <button id="nextBtn" type="submit">Next</button>
+</form>
+
+<script>
+  // Maze layout: 0 = path, 1 = wall
+  const mazeLayout = [
+    [0,1,0,0,0,0,1,0,0,0],
+    [0,1,0,1,1,0,1,0,1,0],
+    [0,0,0,0,1,0,0,0,1,0],
+    [1,1,1,0,1,1,1,0,1,0],
+    [0,0,0,0,0,0,1,0,0,0],
+    [0,1,1,1,1,0,1,1,1,0],
+    [0,0,0,0,1,0,0,0,1,0],
+    [0,1,1,0,1,1,1,0,1,0],
+    [0,1,0,0,0,0,0,0,1,0],
+    [0,1,0,1,1,1,1,1,1,0]
+  ];
+
+  const maze = document.getElementById('maze');
+  const rows = mazeLayout.length;
+  const cols = mazeLayout[0].length;
+
+  let playerPos = {row: 0, col: 0}; // Start at top-left corner
+  const finishPos = {row: 9, col: 9}; // Finish point
+
+  const nextBtn = document.getElementById('nextBtn');
+  const customMessage = document.getElementById('customMessage');
+
+  // Create maze grid
+  function createMaze() {
+    maze.innerHTML = '';
+    for(let r = 0; r < rows; r++) {
+      for(let c = 0; c < cols; c++) {
+        const cell = document.createElement('div');
+        cell.classList.add('cell');
+        if(mazeLayout[r][c] === 1) cell.classList.add('wall');
+        if(r === playerPos.row && c === playerPos.col) cell.id = 'player';
+        if(r === finishPos.row && c === finishPos.col) cell.id = 'finish';
+        maze.appendChild(cell);
+      }
+    }
+  }
+
+  function movePlayer(dr, dc) {
+    const newRow = playerPos.row + dr;
+    const newCol = playerPos.col + dc;
+
+    // Check boundaries and wall collisions
+    if(newRow >= 0 && newRow < rows && newCol >= 0 && newCol < cols) {
+      if(mazeLayout[newRow][newCol] === 0) {
+        playerPos.row = newRow;
+        playerPos.col = newCol;
+        createMaze();
+        checkWin();
+      }
+    }
+  }
+
+  function checkWin() {
+    if(playerPos.row === finishPos.row && playerPos.col === finishPos.col) {
+      customMessage.textContent = 'You reached the finish! ??';
+      nextBtn.style.display = 'inline-block';
+      window.removeEventListener('keydown', handleKey);
+    }
+  }
+
+  function handleKey(e) {
+    switch(e.key) {
+      case 'ArrowUp':
+        movePlayer(-1, 0);
+        break;
+      case 'ArrowDown':
+        movePlayer(1, 0);
+        break;
+      case 'ArrowLeft':
+        movePlayer(0, -1);
+        break;
+      case 'ArrowRight':
+        movePlayer(0, 1);
+        break;
+    }
+  }
+
+  window.addEventListener('keydown', handleKey);
+
+  createMaze();
+</script>
+
+</body>
+</html>

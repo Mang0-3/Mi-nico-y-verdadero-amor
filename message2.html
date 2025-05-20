@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Number Tap Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: #fafafa;
+      min-height: 100vh;
+      margin: 0;
+    }
+    #message {
+      margin-bottom: 20px;
+      color: #333;
+      font-weight: bold;
+      font-size: 18px;
+      text-align: center;
+    }
+    .container {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      max-width: 400px;
+      justify-content: center;
+    }
+    button.number-btn {
+      width: 50px;
+      height: 50px;
+      font-size: 18px;
+      cursor: pointer;
+      border: none;
+      border-radius: 12px;
+      color: white;
+      font-weight: bold;
+      transition: opacity 0.3s;
+    }
+    .hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+    form {
+      margin-top: 30px;
+      width: 100%;
+      max-width: 400px;
+      display: flex;
+      justify-content: center;
+    }
+    button#next-btn {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      font-size: 18px;
+      border-radius: 20px;
+      cursor: pointer;
+      display: none;
+      transition: background-color 0.3s;
+    }
+    button#next-btn:hover {
+      background-color: #218838;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ?? Put your custom message here -->
+  <div id="message">Secondly, I want to apologize, because the real reason why I didn't go online for a long time is because umiiwas ako sa'yo.
+ Hindi dahil galit ako sa'yo, but because nasasaktan ako.
+ Yes, nasasaktan ako. Ang sakit kayang isipin na
+ yung taong minahal mo is wala na palang gusto sa'yo.
+ Ang sakit kaya pag pinagtatabuyan ka na ng taong dating lagi mong kasama.
+ Ang sakit nun, Ga.
+ Promise.
+ Na-trigger nga yung trauma ko ehh (if hindi mo maalala, yung trauma ko nung nainlove ako sa dati
+ kong best friend, and naging reason 'yun kung bakit kami nag-F.O.).
+And another thing is, nung nagkita tayo nung meeting, sobrang sakit nun--lalo na nung sinabi mo sa'king,
+ "Kinalimutan ko na lahat 'yun" (yung sa munisipyo).
+ Mas na-feel ko tuloy na napaka-replaceable ko. Like, ganoon ba ako kadaling kalimutan?
+ Kaya these past few days, sunod-sunod yung self-sabotage ko.
+ As in, naisip ko tuloy na:
+ "Mahirap ba akong mahalin?"
+ "Hindi ba ako worth it mahalin or ipaglaban?"
+ "Hindi ba ako worth it hintayin?"</div>
+
+  <div class="container" id="buttons-container"></div>
+
+  <form action="message3.html" method="get">
+    <button id="next-btn" type="submit">Next</button>
+  </form>
+
+  <script>
+    const container = document.getElementById("buttons-container");
+    const nextBtn = document.getElementById("next-btn");
+    const message = document.getElementById("message");
+
+    function shuffle(array) {
+      for (let i = array.length -1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i+1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    function getRandomColor() {
+      const r = Math.floor(Math.random() * 156) + 100;
+      const g = Math.floor(Math.random() * 156) + 100;
+      const b = Math.floor(Math.random() * 156) + 100;
+      return `rgb(${r},${g},${b})`;
+    }
+
+    const numbers = shuffle([...Array(10).keys()].map(n => n + 1));
+    let nextNumberToTap = 1;
+
+    numbers.forEach(num => {
+      const btn = document.createElement("button");
+      btn.textContent = num;
+      btn.type = "button";
+      btn.classList.add("number-btn");
+      btn.style.backgroundColor = getRandomColor();
+
+      btn.addEventListener("click", () => {
+        if (num === nextNumberToTap) {
+          btn.classList.add("hidden");
+          nextNumberToTap++;
+          if (nextNumberToTap > 10) {
+            message.textContent = ""; // You can leave your message if you want
+            nextBtn.style.display = "inline-block";
+          }
+        } else {
+          // Don’t remove button; just flash error
+          message.textContent = `Oops! Please tap number ${nextNumberToTap}.`;
+        }
+      });
+
+      container.appendChild(btn);
+    });
+  </script>
+</body>
+</html>
